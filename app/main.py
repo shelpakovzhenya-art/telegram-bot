@@ -14,11 +14,12 @@ from app.db.base import init_db
 # Запускаем ДО настройки логирования, чтобы сервер успел стартовать
 try:
     from keep_alive import keep_alive
-    keep_alive()
     import time
-    time.sleep(1)  # Даем время серверу запуститься
+    keep_alive()
+    time.sleep(2)  # Даем время серверу запуститься
+    print("Keep-alive initialized")
 except ImportError:
-    pass  # Если файла нет, просто пропускаем
+    print("Keep-alive module not found, skipping...")
 except Exception as e:
     print(f"Warning: Keep-alive failed to start: {e}")
 
