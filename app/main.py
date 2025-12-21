@@ -10,6 +10,13 @@ from app.bot.dispatcher import create_bot, setup_dispatcher
 from app.core.settings import Settings
 from app.db.base import init_db
 
+# Keep-alive для Replit (чтобы не выключался)
+try:
+    from keep_alive import keep_alive
+    keep_alive()
+except ImportError:
+    pass  # Если файла нет, просто пропускаем
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
