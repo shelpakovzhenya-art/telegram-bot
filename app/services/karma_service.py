@@ -34,21 +34,10 @@ class KarmaService:
         to_user_id: int,
         chat_id: int,
     ) -> bool:
-        """Add karma to user. Returns True if successful, False if cooldown."""
-        # Check cooldown
-        cooldown_time = datetime.utcnow() - timedelta(minutes=self.cooldown_minutes)
-        stmt = select(KarmaTransaction).where(
-            KarmaTransaction.from_user_id == from_user_id,
-            KarmaTransaction.to_user_id == to_user_id,
-            KarmaTransaction.chat_id == chat_id,
-            KarmaTransaction.created_at >= cooldown_time,
-        )
-        result = await session.execute(stmt)
-        existing = result.scalar_one_or_none()
-        if existing:
-            return False  # Cooldown active
-
-        # Add karma transaction
+        """Add karma to user. Returns True if successful."""
+        # No cooldown - always allow karma
+        
+        # Add karma transaction (for history, but not checking cooldown)
         transaction = KarmaTransaction(
             from_user_id=from_user_id,
             to_user_id=to_user_id,

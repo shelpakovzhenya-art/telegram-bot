@@ -20,11 +20,11 @@ def setup_dispatcher(bot: Bot, settings: Settings) -> Dispatcher:
     dp.message.middleware(ChatFilterMiddleware(settings))
     dp.callback_query.middleware(ChatFilterMiddleware(settings))
 
-    # Register routers
+    # Register routers (order matters - commands first, then general handlers)
     dp.include_router(start_help.router)
+    dp.include_router(moderation.get_moderation_router(bot, settings))  # Commands first
     dp.include_router(greetings.get_greeting_router(settings))
-    dp.include_router(karma.get_karma_router(settings))
-    dp.include_router(moderation.get_moderation_router(bot, settings))
+    dp.include_router(karma.get_karma_router(settings))  # General message handler last
 
     logger.info("Dispatcher configured")
     return dp

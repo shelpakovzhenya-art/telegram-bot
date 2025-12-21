@@ -100,6 +100,10 @@ def get_karma_router(settings: Settings) -> Router:
         if message.from_user.is_bot:
             return
 
+        # Skip commands
+        if message.text.startswith("/"):
+            return
+
         text_lower = message.text.lower()
 
         # Check if message contains karma keywords
@@ -155,10 +159,6 @@ def get_karma_router(settings: Settings) -> Router:
                 else "пользователю"
             )
             await message.reply(f"✅ Карма начислена {target_name}! (+1)")
-        else:
-            await message.reply(
-                f"⏳ Кулдаун активен. Попробуйте через {settings.KARMA_COOLDOWN_MINUTES} минут."
-            )
 
     return router
 
