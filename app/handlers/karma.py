@@ -126,9 +126,21 @@ def get_karma_router(settings: Settings) -> Router:
             return
 
         text_lower = message.text.lower()
+        
+        # Normalize text (remove extra spaces, punctuation for better matching)
+        text_normalized = re.sub(r'[^\w\s]', ' ', text_lower)  # Replace punctuation with spaces
+        text_normalized = ' '.join(text_normalized.split())  # Normalize multiple spaces to single
 
-        # Check if message contains karma keywords
-        has_keyword = any(keyword in text_lower for keyword in KARMA_KEYWORDS)
+        # Check if message contains karma keywords (including multi-word phrases)
+        # Check both original and normalized text for better matching
+        has_keyword = False
+        for keyword in KARMA_KEYWORDS:
+            keyword_lower = keyword.lower()
+            # Check in both original and normalized text
+            if keyword_lower in text_lower or keyword_lower in text_normalized:
+                has_keyword = True
+                break
+        
         if not has_keyword:
             return
 
