@@ -11,11 +11,16 @@ from app.core.settings import Settings
 from app.db.base import init_db
 
 # Keep-alive для Replit (чтобы не выключался)
+# Запускаем ДО настройки логирования, чтобы сервер успел стартовать
 try:
     from keep_alive import keep_alive
     keep_alive()
+    import time
+    time.sleep(1)  # Даем время серверу запуститься
 except ImportError:
     pass  # Если файла нет, просто пропускаем
+except Exception as e:
+    print(f"Warning: Keep-alive failed to start: {e}")
 
 # Configure logging
 logging.basicConfig(
