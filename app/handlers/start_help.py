@@ -3,6 +3,8 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
+from app.bot.utils import get_topic_reply_kwargs
+
 router = Router()
 
 
@@ -32,10 +34,10 @@ async def cmd_start_help(message: Message) -> None:
 • Ответьте на сообщение со словами "спасибо", "спс", "thx" и т.д.
 • Или напишите "спасибо @username"
 • Автору сообщения добавится +1 карма
-• Кулдаун: 60 минут между начислениями
+• Карма начисляется без ограничений по времени
 
 <b>Система предупреждений:</b>
 • При достижении лимита (3 предупреждения) пользователь получает мут на 24 часа
 """
-    await message.answer(help_text)
+    await message.answer(help_text, **get_topic_reply_kwargs(message))
 

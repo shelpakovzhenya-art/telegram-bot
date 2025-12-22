@@ -5,6 +5,7 @@ from aiogram import Bot, Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
+from app.bot.utils import get_topic_reply_kwargs
 from app.core.settings import Settings
 from app.db.session import get_db_session
 from app.services.admin_service import can_restrict_members, check_message_from_admin
@@ -33,23 +34,24 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
             is_admin = await check_message_from_admin(message)
             logger.info(f"Admin check result: {is_admin}")
             if not is_admin:
-                await message.reply("❌ Эта команда доступна только администраторам!")
+                await message.reply("❌ Эта команда доступна только администраторам!", **get_topic_reply_kwargs(message))
                 return
         except Exception as e:
             logger.error(f"Error checking admin: {e}", exc_info=True)
-            await message.reply("❌ Ошибка при проверке прав администратора.")
+            await message.reply("❌ Ошибка при проверке прав администратора.", **get_topic_reply_kwargs(message))
             return
 
         # Must have reply
         if not message.reply_to_message:
             await message.reply(
                 "❌ Ответьте на сообщение пользователя, которому хотите выдать предупреждение.\n"
-                "Использование: /warn [ответ на сообщение]"
+                "Использование: /warn [ответ на сообщение]",
+                **get_topic_reply_kwargs(message)
             )
             return
 
         if not message.reply_to_message.from_user:
-            await message.reply("❌ Не удалось определить пользователя.")
+            await message.reply("❌ Не удалось определить пользователя.", **get_topic_reply_kwargs(message))
             return
 
         target_user_id = message.reply_to_message.from_user.id
@@ -61,12 +63,12 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
 
         # Can't warn yourself
         if target_user_id == message.from_user.id:
-            await message.reply("❌ Нельзя выдать предупреждение самому себе!")
+            await message.reply("❌ Нельзя выдать предупреждение самому себе!", **get_topic_reply_kwargs(message))
             return
 
         # Can't warn bots
         if message.reply_to_message.from_user.is_bot:
-            await message.reply("❌ Нельзя выдать предупреждение боту!")
+            await message.reply("❌ Нельзя выдать предупреждение боту!", **get_topic_reply_kwargs(message))
             return
 
         # Add warning
@@ -142,10 +144,10 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
                 else:
                     response += "\n\n⚠️ У бота нет прав для ограничения участников."
 
-            await message.reply(response)
+            await message.reply(response, **get_topic_reply_kwargs(message))
         except Exception as e:
             logger.error(f"Error in /warn: {e}", exc_info=True)
-            await message.reply(f"❌ Ошибка при выдаче предупреждения: {str(e)}")
+            await message.reply(f"❌ Ошибка при выдаче предупреждения: {str(e)}", **get_topic_reply_kwargs(message))
 
     @router.message(Command("warns"))
     async def cmd_warns(message: Message) -> None:
@@ -164,7 +166,7 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
                 username = parts[1].lstrip("@")
                 # Try to resolve username (simplified)
                 # For now, require reply
-                await message.reply("❌ Ответьте на сообщение пользователя")
+                await message.reply("❌ Ответьте на сообщение пользователя", **get_topic_reply_kwargs(message))
                 return
         else:
             target_user_id = message.from_user.id
@@ -184,7 +186,8 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
             )
 
         await message.reply(
-            f"⚠️ У {target_name} предупреждений: {warn_count}/{settings.WARN_LIMIT}"
+            f"⚠️ У {target_name} предупреждений: {warn_count}/{settings.WARN_LIMIT}",
+            **get_topic_reply_kwargs(message)
         )
 
     @router.message(Command("unwarn"))
@@ -195,7 +198,7 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
 
         # Check admin rights
         if not await check_message_from_admin(message):
-            await message.reply("❌ Эта команда доступна только администраторам!")
+            await message.reply("❌ Эта команда доступна только администраторам!", **get_topic_reply_kwargs(message))
             return
 
         # Get target user
@@ -209,11 +212,11 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
                 username = parts[1].lstrip("@")
                 # Try to resolve username (simplified)
                 # For now, require reply
-                await message.reply("❌ Ответьте на сообщение пользователя")
+                await message.reply("❌ Ответьте на сообщение пользователя", **get_topic_reply_kwargs(message))
                 return
 
         if not target_user_id:
-            await message.reply("❌ Ответьте на сообщение пользователя")
+            await message.reply("❌ Ответьте на сообщение пользователя", **get_topic_reply_kwargs(message))
             return
 
         # Remove warning
@@ -229,7 +232,8 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
             )
 
         await message.reply(
-            f"✅ Предупреждение снято с {target_name}. Осталось предупреждений: {warn_count}/{settings.WARN_LIMIT}"
+            f"✅ Предупреждение снято с {target_name}. Осталось предупреждений: {warn_count}/{settings.WARN_LIMIT}",
+            **get_topic_reply_kwargs(message)
         )
 
     @router.message(Command("mute"))
@@ -240,7 +244,7 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
 
         # Check admin rights
         if not await check_message_from_admin(message):
-            await message.reply("❌ Эта команда доступна только администраторам!")
+            await message.reply("❌ Эта команда доступна только администраторам!", **get_topic_reply_kwargs(message))
             return
 
         # Check if bot can restrict members
@@ -248,7 +252,7 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
             bot, message.chat.id, message.from_user.id
         )
         if not can_mute:
-            await message.reply("❌ У бота нет прав для ограничения участников!")
+            await message.reply("❌ У бота нет прав для ограничения участников!", **get_topic_reply_kwargs(message))
             return
 
         # Parse command arguments
@@ -286,7 +290,8 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
                     # For now, require reply - username lookup would need more complex logic
                     await message.reply(
                         "❌ Ответьте на сообщение пользователя.\n"
-                        "Использование: /mute [reply] [часы 1-24]"
+                        "Использование: /mute [reply] [часы 1-24]",
+                        **get_topic_reply_kwargs(message)
                     )
                     return
                 except Exception:
@@ -304,20 +309,21 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
         if not target_user_id:
             await message.reply(
                 "❌ Ответьте на сообщение пользователя.\n"
-                "Использование: /mute [reply] [часы 1-24]"
+                "Использование: /mute [reply] [часы 1-24]",
+                **get_topic_reply_kwargs(message)
             )
             return
 
         # Can't mute yourself
         if target_user_id == message.from_user.id:
-            await message.reply("❌ Нельзя замутить самого себя!")
+            await message.reply("❌ Нельзя замутить самого себя!", **get_topic_reply_kwargs(message))
             return
 
         # Can't mute bots
         try:
             target_member = await bot.get_chat_member(message.chat.id, target_user_id)
             if target_member.user.is_bot:
-                await message.reply("❌ Нельзя замутить бота!")
+                await message.reply("❌ Нельзя замутить бота!", **get_topic_reply_kwargs(message))
                 return
         except Exception:
             pass
@@ -367,12 +373,12 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
                 f"⏳ Пользователь не сможет писать сообщения до окончания мута."
             )
 
-            await message.reply(response)
+            await message.reply(response, **get_topic_reply_kwargs(message))
         except Exception as e:
             import logging
             logger = logging.getLogger(__name__)
             logger.error(f"Error muting user: {e}", exc_info=True)
-            await message.reply(f"❌ Не удалось замутить пользователя: {str(e)}")
+            await message.reply(f"❌ Не удалось замутить пользователя: {str(e)}", **get_topic_reply_kwargs(message))
 
     @router.message(Command("unmute"))
     async def cmd_unmute(message: Message) -> None:
@@ -382,7 +388,7 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
 
         # Check admin rights
         if not await check_message_from_admin(message):
-            await message.reply("❌ Эта команда доступна только администраторам!")
+            await message.reply("❌ Эта команда доступна только администраторам!", **get_topic_reply_kwargs(message))
             return
 
         # Check if bot can restrict members
@@ -390,7 +396,7 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
             bot, message.chat.id, message.from_user.id
         )
         if not can_mute:
-            await message.reply("❌ У бота нет прав для ограничения участников!")
+            await message.reply("❌ У бота нет прав для ограничения участников!", **get_topic_reply_kwargs(message))
             return
 
         # Get target user
@@ -402,11 +408,11 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
             parts = message.text.split()
             if len(parts) > 1:
                 username = parts[1].lstrip("@")
-                await message.reply("❌ Ответьте на сообщение пользователя")
+                await message.reply("❌ Ответьте на сообщение пользователя", **get_topic_reply_kwargs(message))
                 return
 
         if not target_user_id:
-            await message.reply("❌ Ответьте на сообщение пользователя")
+            await message.reply("❌ Ответьте на сообщение пользователя", **get_topic_reply_kwargs(message))
             return
 
         # Unmute user (restore permissions)
@@ -442,9 +448,9 @@ def get_moderation_router(bot: Bot, settings: Settings) -> Router:
                     message.reply_to_message.from_user.first_name or "пользователю"
                 )
 
-            await message.reply(f"✅ Мут снят с {target_name}.")
+            await message.reply(f"✅ Мут снят с {target_name}.", **get_topic_reply_kwargs(message))
         except Exception as e:
-            await message.reply(f"❌ Не удалось снять мут: {e}")
+            await message.reply(f"❌ Не удалось снять мут: {e}", **get_topic_reply_kwargs(message))
 
     return router
 

@@ -5,6 +5,7 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
+from app.bot.utils import get_topic_reply_kwargs
 from app.core.settings import Settings
 from app.db.session import get_db_session
 from app.services.karma_service import KarmaService
@@ -80,7 +81,7 @@ def get_karma_router(settings: Settings) -> Router:
                 message.reply_to_message.from_user.first_name or "пользователь"
             )
 
-        await message.answer(f"📊 Карма {target_name}: {karma}")
+        await message.answer(f"📊 Карма {target_name}: {karma}", **get_topic_reply_kwargs(message))
 
     @router.message(Command("top"))
     async def cmd_top(message: Message) -> None:
@@ -94,7 +95,7 @@ def get_karma_router(settings: Settings) -> Router:
             )
 
         if not top_users:
-            await message.answer("📊 Пока нет данных о карме в этом чате.")
+            await message.answer("📊 Пока нет данных о карме в этом чате.", **get_topic_reply_kwargs(message))
             return
 
         # Build top list
@@ -109,7 +110,7 @@ def get_karma_router(settings: Settings) -> Router:
 
             top_text += f"{idx}. {user_name}: {karma} 🎯\n"
 
-        await message.answer(top_text)
+        await message.answer(top_text, **get_topic_reply_kwargs(message))
 
     @router.message()
     async def handle_karma_message(message: Message) -> None:
@@ -163,7 +164,7 @@ def get_karma_router(settings: Settings) -> Router:
 
         # Can't give karma to yourself
         if target_user_id == message.from_user.id:
-            await message.reply("❌ Нельзя начислить карму самому себе!")
+            await message.reply("❌ Нельзя начислить карму самому себе!", **get_topic_reply_kwargs(message))
             return
 
         # Can't give karma to bots
@@ -191,7 +192,7 @@ def get_karma_router(settings: Settings) -> Router:
                 if message.reply_to_message
                 else "пользователю"
             )
-            await message.reply(f"✅ Карма начислена {target_name}! (+1)")
+            await message.reply(f"✅ Карма начислена {target_name}! (+1)", **get_topic_reply_kwargs(message))
 
     return router
 
