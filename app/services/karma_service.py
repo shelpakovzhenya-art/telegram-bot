@@ -1,6 +1,4 @@
 """Karma service."""
-from datetime import datetime, timedelta
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,7 +12,7 @@ class KarmaService:
     def __init__(self, settings: Settings) -> None:
         """Initialize karma service."""
         self.settings = settings
-        self.cooldown_minutes = settings.KARMA_COOLDOWN_MINUTES
+        # Cooldown removed - karma can be given without restrictions
 
     async def get_karma(
         self, session: AsyncSession, user_id: int, chat_id: int
