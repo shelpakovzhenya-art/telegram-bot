@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="nav">
+    <div class="logo">TEACHER · EN</div>
+    <nav class="nav-links">
+      <a href="#services">Услуги</a>
+      <a href="#pricing">Прайс</a>
+      <a href="#groups">Группы</a>
+      <a href="#testimonials">Отзывы</a>
+      <a class="btn btn-outline" href="/admin">Админка</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-text">
+        <div class="badge">{{ data.content.hero_badge }}</div>
+        <h1>{{ data.content.hero_title }}</h1>
+        <p class="subtitle">{{ data.content.hero_subtitle }}</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-open="lead">Записаться на консультацию</button>
+          <button class="btn btn-ghost" data-open="plan">Получить план</button>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <span class="stat-number">120+</span>
+            <span class="stat-label">учеников</span>
+          </div>
+          <div>
+            <span class="stat-number">97%</span>
+            <span class="stat-label">довольных</span>
+          </div>
+          <div>
+            <span class="stat-number">8 лет</span>
+            <span class="stat-label">опыт</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="image-card">
+          <img src="/static/images/teacher-1.svg" alt="Педагог" />
+        </div>
+        <div class="image-card secondary">
+          <img src="/static/images/teacher-2.svg" alt="Педагог" />
+        </div>
+        <div class="floating-card">
+          <div class="pill">Очно · Онлайн</div>
+          <div class="pill">Индивидуально</div>
+          <div class="pill">Группы</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about">
+      <div class="about-text">
+        <h2>{{ data.content.about_title }}</h2>
+        <p>{{ data.content.about_text }}</p>
+      </div>
+      <div class="about-quote">
+        <span>“</span>
+        <p>{{ data.content.about_quote }}</p>
+      </div>
+    </section>
+
+    <section id="services" class="section">
+      <div class="section-head">
+        <h2>Услуги</h2>
+        <p>Форматы для разных целей: быстрый рост или системная подготовка.</p>
+      </div>
+      <div class="card-grid">
+        {% for service in data.services %}
+          <article class="card">
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description }}</p>
+            <div class="card-meta">
+              <span>{{ service.duration }}</span>
+              <strong>{{ service.price }}</strong>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="pricing" class="section alt">
+      <div class="section-head">
+        <h2>Прайс-лист</h2>
+        <p>Прозрачные пакеты и гибкие варианты оплаты.</p>
+      </div>
+      <div class="price-grid">
+        {% for price in data.pricing %}
+          <article class="price-card">
+            <h3>{{ price.name }}</h3>
+            <p>{{ price.description }}</p>
+            <div class="price">{{ price.price }}</div>
+            <button class="btn btn-outline">Выбрать</button>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="groups" class="section">
+      <div class="section-head">
+        <h2>Групповые занятия</h2>
+        <p>Компактные группы, ощутимая динамика и поддержка.</p>
+      </div>
+      <div class="card-grid">
+        {% for group in data.groups %}
+          <article class="card">
+            <div class="tag">{{ group.format }}</div>
+            <h3>{{ group.name }}</h3>
+            <p>{{ group.description }}</p>
+            <div class="card-meta">
+              <span>{{ group.schedule }}</span>
+              <strong>{{ group.price }}</strong>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="testimonials" class="section alt">
+      <div class="section-head">
+        <h2>Отзывы</h2>
+        <p>Живые результаты учеников и честный опыт.</p>
+      </div>
+      <div class="testimonial-grid">
+        {% for item in data.testimonials %}
+          <article class="testimonial">
+            <p>{{ item.text }}</p>
+            <div class="testimonial-footer">
+              <strong>{{ item.name }}</strong>
+              <span>{{ item.tag }}</span>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="cta">
+      <div>
+        <h2>{{ data.content.cta_title }}</h2>
+        <p>{{ data.content.cta_text }}</p>
+      </div>
+      <button class="btn btn-primary" data-open="lead">Оставить заявку</button>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>© 2026 Teacher · English</div>
+    <div class="footer-links">
+      <a href="#services">Услуги</a>
+      <a href="#pricing">Прайс</a>
+      <a href="#groups">Группы</a>
+      <a href="#testimonials">Отзывы</a>
+    </div>
+  </footer>
+
+  <div id="lead-modal" class="modal">
+    <div class="modal-body">
+      <button class="modal-close" data-close>×</button>
+      <h3>Оставить заявку</h3>
+      <p>Напишите ваш запрос — и мы свяжемся с вами в удобное время.</p>
+      <form class="form">
+        <input type="text" placeholder="Имя" required />
+        <input type="tel" placeholder="Телефон" required />
+        <textarea placeholder="Цель обучения"></textarea>
+        <button class="btn btn-primary" type="submit">Отправить</button>
+      </form>
+      <span class="hint">Демо-форма: подключите вашу CRM или телеграм-бот.</span>
+    </div>
+  </div>
+{% endblock %}

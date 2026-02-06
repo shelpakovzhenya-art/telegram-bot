@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+{% block content %}
+  <h1>Парсеры</h1>
+  <div class="parser-grid">
+    <section class="parser-card">
+      <h2>Парсер контента</h2>
+      <p>Вставьте URL, чтобы подтянуть метатеги, заголовки и краткое описание.</p>
+      <form class="form" data-parser="content">
+        <label>
+          URL
+          <input name="url" placeholder="https://example.com" required />
+        </label>
+        <button class="btn btn-primary" type="submit">Запустить</button>
+      </form>
+      <div class="parser-result" data-result="content"></div>
+    </section>
+
+    <section class="parser-card">
+      <h2>Парсер отзывов</h2>
+      <p>Импортируйте примеры отзывов для быстрого наполнения сайта.</p>
+      <form class="form" data-parser="reviews">
+        <label>
+          URL
+          <input name="url" placeholder="https://example.com/reviews" required />
+        </label>
+        <button class="btn btn-primary" type="submit">Запустить</button>
+      </form>
+      <div class="parser-result" data-result="reviews"></div>
+    </section>
+  </div>
+{% endblock %}

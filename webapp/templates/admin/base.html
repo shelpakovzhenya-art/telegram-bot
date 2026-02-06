@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Админка · Teacher</title>
+    <link rel="stylesheet" href="/static/css/admin.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-logo">Teacher CMS</div>
+      <nav>
+        <a href="/admin">Обзор</a>
+        <a href="/admin/meta">Метатеги</a>
+        <a href="/admin/content">Контент</a>
+        <a href="/admin/services">Услуги</a>
+        <a href="/admin/pricing">Прайс</a>
+        <a href="/admin/groups">Группы</a>
+        <a href="/admin/testimonials">Отзывы</a>
+        <a href="/admin/parsers">Парсеры</a>
+        <a href="/">Открыть сайт</a>
+      </nav>
+    </aside>
+    <main class="admin">
+      {% block content %}{% endblock %}
+    </main>
+    <script src="/static/js/admin.js"></script>
+  </body>
+</html>

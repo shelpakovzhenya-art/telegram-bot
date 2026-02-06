@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% block content %}
+  <h1>Контент сайта</h1>
+  <form class="form" data-endpoint="/api/content">
+    <label>
+      Бейдж в шапке
+      <input name="hero_badge" value="{{ data.content.hero_badge }}" />
+    </label>
+    <label>
+      Заголовок героя
+      <input name="hero_title" value="{{ data.content.hero_title }}" required />
+    </label>
+    <label>
+      Подзаголовок героя
+      <textarea name="hero_subtitle" required>{{ data.content.hero_subtitle }}</textarea>
+    </label>
+    <label>
+      Заголовок "О педагоге"
+      <input name="about_title" value="{{ data.content.about_title }}" required />
+    </label>
+    <label>
+      Текст "О педагоге"
+      <textarea name="about_text" required>{{ data.content.about_text }}</textarea>
+    </label>
+    <label>
+      Цитата
+      <textarea name="about_quote">{{ data.content.about_quote }}</textarea>
+    </label>
+    <label>
+      CTA заголовок
+      <input name="cta_title" value="{{ data.content.cta_title }}" required />
+    </label>
+    <label>
+      CTA текст
+      <textarea name="cta_text" required>{{ data.content.cta_text }}</textarea>
+    </label>
+    <button class="btn btn-primary" type="submit">Сохранить</button>
+  </form>
+{% endblock %}

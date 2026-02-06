@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+{% block content %}
+  <h1>Услуги</h1>
+  <div class="admin-list">
+    {% for item in data.services %}
+      <div class="list-item">
+        <div>
+          <strong>{{ item.name }}</strong>
+          <span>{{ item.description }}</span>
+        </div>
+        <div class="list-meta">
+          <span>{{ item.duration }}</span>
+          <span>{{ item.price }}</span>
+          <button class="btn btn-ghost" data-edit="services" data-id="{{ item.id }}">Редактировать</button>
+          <button class="btn btn-outline" data-delete="services" data-id="{{ item.id }}">Удалить</button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <form class="form" data-endpoint="/api/services" data-type="services">
+    <h2>Добавить / редактировать</h2>
+    <input type="hidden" name="item_id" />
+    <label>
+      Название
+      <input name="name" required />
+    </label>
+    <label>
+      Описание
+      <textarea name="description" required></textarea>
+    </label>
+    <label>
+      Длительность
+      <input name="duration" required />
+    </label>
+    <label>
+      Цена
+      <input name="price" required />
+    </label>
+    <button class="btn btn-primary" type="submit">Сохранить</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+{% block content %}
+  <section class="admin-hero">
+    <div>
+      <h1>Панель управления</h1>
+      <p>Быстро редактируйте контент, цены, группы и отзывы.</p>
+    </div>
+    <div class="admin-stats">
+      <div>
+        <strong>{{ data.services | length }}</strong>
+        <span>услуг</span>
+      </div>
+      <div>
+        <strong>{{ data.pricing | length }}</strong>
+        <span>пакетов</span>
+      </div>
+      <div>
+        <strong>{{ data.groups | length }}</strong>
+        <span>групп</span>
+      </div>
+      <div>
+        <strong>{{ data.testimonials | length }}</strong>
+        <span>отзывов</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="admin-grid">
+    <a class="admin-card" href="/admin/meta">Метатеги и SEO</a>
+    <a class="admin-card" href="/admin/content">Контент сайта</a>
+    <a class="admin-card" href="/admin/services">Услуги</a>
+    <a class="admin-card" href="/admin/pricing">Прайс-лист</a>
+    <a class="admin-card" href="/admin/groups">Группы</a>
+    <a class="admin-card" href="/admin/testimonials">Отзывы</a>
+    <a class="admin-card" href="/admin/parsers">Парсеры контента</a>
+  </section>
+{% endblock %}

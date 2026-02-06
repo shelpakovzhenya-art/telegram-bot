@@ -1,0 +1,27 @@
+{% extends "admin/base.html" %}
+{% block content %}
+  <h1>Метатеги</h1>
+  <form class="form" data-endpoint="/api/meta">
+    <label>
+      Title
+      <input name="title" value="{{ data.meta.title }}" required />
+    </label>
+    <label>
+      Description
+      <textarea name="description" required>{{ data.meta.description }}</textarea>
+    </label>
+    <label>
+      Keywords
+      <input name="keywords" value="{{ data.meta.keywords }}" />
+    </label>
+    <label>
+      OG Title
+      <input name="og_title" value="{{ data.meta.og_title }}" />
+    </label>
+    <label>
+      OG Description
+      <textarea name="og_description">{{ data.meta.og_description }}</textarea>
+    </label>
+    <button class="btn btn-primary" type="submit">Сохранить</button>
+  </form>
+{% endblock %}

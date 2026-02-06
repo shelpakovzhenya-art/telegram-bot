@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+{% block content %}
+  <h1>Отзывы</h1>
+  <div class="admin-list">
+    {% for item in data.testimonials %}
+      <div class="list-item">
+        <div>
+          <strong>{{ item.name }}</strong>
+          <span>{{ item.text }}</span>
+        </div>
+        <div class="list-meta">
+          <span>{{ item.tag }}</span>
+          <button class="btn btn-ghost" data-edit="testimonials" data-id="{{ item.id }}">Редактировать</button>
+          <button class="btn btn-outline" data-delete="testimonials" data-id="{{ item.id }}">Удалить</button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <form class="form" data-endpoint="/api/testimonials" data-type="testimonials">
+    <h2>Добавить / редактировать</h2>
+    <input type="hidden" name="item_id" />
+    <label>
+      Имя
+      <input name="name" required />
+    </label>
+    <label>
+      Тег
+      <input name="tag" required />
+    </label>
+    <label>
+      Текст
+      <textarea name="text" required></textarea>
+    </label>
+    <button class="btn btn-primary" type="submit">Сохранить</button>
+  </form>
+{% endblock %}
