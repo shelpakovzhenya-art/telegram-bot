@@ -25,6 +25,7 @@ class Settings(BaseSettings):
 
     # Greeting settings
     GREETING_COOLDOWN_MINUTES: int = 10
+    GREETING_CHAT_IDS: Optional[str] = None  # Comma-separated list of chat IDs for greetings
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -39,6 +40,15 @@ class Settings(BaseSettings):
             return None
         try:
             return [int(chat_id.strip()) for chat_id in self.ALLOWED_CHAT_IDS.split(",")]
+        except ValueError:
+            return None
+
+    def get_greeting_chat_ids(self) -> Optional[list[int]]:
+        """Parse GREETING_CHAT_IDS into a list of integers."""
+        if not self.GREETING_CHAT_IDS:
+            return None
+        try:
+            return [int(chat_id.strip()) for chat_id in self.GREETING_CHAT_IDS.split(",")]
         except ValueError:
             return None
 

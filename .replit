@@ -1,3 +1,0 @@
-run = "python -m app.main"
-language = "python3"
-

@@ -15,6 +15,7 @@ router = Router()
 def get_greeting_router(settings: Settings) -> Router:
     """Get greeting router with settings."""
     cooldown_minutes = settings.GREETING_COOLDOWN_MINUTES
+    greeting_chat_ids = settings.get_greeting_chat_ids()
 
     @router.chat_member(ChatMemberUpdatedFilter(member_status_changed=(LEFT | KICKED) >> MEMBER))
     async def greet_new_member(event: ChatMemberUpdated) -> None:
@@ -24,6 +25,10 @@ def get_greeting_router(settings: Settings) -> Router:
 
         user = event.new_chat_member.user
         chat = event.chat
+
+        # Restrict greetings to configured chats only
+        if greeting_chat_ids is not None and chat.id not in greeting_chat_ids:
+            return
 
         # Skip bots
         if user.is_bot:

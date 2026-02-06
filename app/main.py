@@ -10,19 +10,6 @@ from app.bot.dispatcher import create_bot, setup_dispatcher
 from app.core.settings import Settings
 from app.db.base import init_db
 
-# Keep-alive для Replit (чтобы не выключался)
-# Запускаем ДО настройки логирования, чтобы сервер успел стартовать
-try:
-    from keep_alive import keep_alive
-    import time
-    keep_alive()
-    time.sleep(2)  # Даем время серверу запуститься
-    print("Keep-alive initialized")
-except ImportError:
-    print("Keep-alive module not found, skipping...")
-except Exception as e:
-    print(f"Warning: Keep-alive failed to start: {e}")
-
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
